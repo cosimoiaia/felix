@@ -1,3 +1,12 @@
+/*
+  FELIX SPINE
+  Cosimo Iaia <cosimo.iaia@gmail.com> Tue May 28 2013
+
+*/
+
+#include<stdio.h>
+#include<adk.h>
+
 
 #define CH_A 12 // Motore A Pin
 #define CH_B 13 // Motore A Pin
@@ -21,10 +30,21 @@
 
 #define MOTOR_STEP 500
 
+char applicationName[] = "Felix's Brain";
+char accessoryName[] = "Felix";
+char companyName[] = "Ommim Mad Inc."
+
+char versionNumber[] = "0.1";
+char serialNumber[] = "1";
+char url[] = "http://www.cosimoiaia.de/felix_brain.apk";
+
 int brightness;
+USBHost Usb;
+ADK adk(&Usb, companyName, applicationName, accessoryName,versionNumber,url,serialNumber);
 
 void setup()
 {
+	cpu_irq_enable();
 	Serial.begin(9600);
 	pinMode(CH_A, OUTPUT);
 	pinMode(CH_B, OUTPUT);
@@ -118,17 +138,24 @@ void test(char c)
 }
 void loop()
 {
+	Usb.Task();
 	int numBytes=0;
-	while (1)
-	{	
-		if((numBytes=Serial.available())>0)
+	uint8_t buf[1];
+	uint32_t nbread = 0;
+	
+	if (adk.isReady())
+	{
+		adk.read(&nbread, RCVSIZE, buf);
+		if (nbread > 0)
 		{
-			char buff;
-			buff=(char)Serial.read();
-			Serial.println(buff);
-			test(buff);
-
+			test((char)buf[i]);
 		}
-		delay(10);
+	}
+	else if((numBytes=Serial.available())>0)
+	{
+		char buff;
+		buff=(char)Serial.read();
+		Serial.println(buff);
+		test(buff);
 	}
 }
