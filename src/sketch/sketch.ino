@@ -32,7 +32,7 @@
 
 char applicationName[] = "Felix's Brain";
 char accessoryName[] = "Felix";
-char companyName[] = "Ommim Mad Inc."
+char companyName[] = "Ommim Mad Inc.";
 
 char versionNumber[] = "0.1";
 char serialNumber[] = "1";
@@ -121,6 +121,7 @@ void test(char c)
 		fade(150, IN);
 		delay(500);
 		fade(150, OUT);
+        }
 	if(c=='a')   /* ALL */
 	{
 		fade(BRIGHTMAX, IN);
@@ -145,10 +146,10 @@ void loop()
 	
 	if (adk.isReady())
 	{
-		adk.read(&nbread, RCVSIZE, buf);
+		adk.read(&nbread, 255, buf);
 		if (nbread > 0)
 		{
-			test((char)buf[i]);
+			test((char)buf[0]);
 		}
 	}
 	else if((numBytes=Serial.available())>0)
