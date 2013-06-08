@@ -132,9 +132,19 @@ void test(char c)
 	}
 	if(c=='w') /* WALK */
 	{
-		walk(200, FORWARD, 2);
-		delay(1000);
-		walk(200, BACKWARD, 2);
+		walk(500, FORWARD, 1);
+	}
+	if(c=='s') /* WALK BACKWARDS */
+	{
+		walk(500, BACKWARD, 1);
+	}
+	if(c=='a')
+	{	
+		motor_left(500, FORWARD, 1);
+	}
+	if(c=='d')
+	{
+		motor_right(500, FORWARD, 1);
 	}
 }
 void loop()
