@@ -11,13 +11,13 @@
 #define CH_A 12 // Motore A Pin
 #define CH_B 13 // Motore A Pin
 
-#define BK_A 9
-#define BK_B 8
+#define BK_A 9 // Freno A
+#define BK_B 8 // Freno B
 
-#define SPIN_A 3
-#define SPIN_B 11
+#define SPIN_A 3 // DIREZIONE A
+#define SPIN_B 11 // DIREZIONE B
 
-#define LED 10
+#define LED 10	// OCCHI
 
 #define FADE 5
 #define FADE_TIME 15
