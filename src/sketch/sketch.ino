@@ -7,6 +7,7 @@
 #include<stdio.h>
 #include<adk.h>
 
+/* Motor Shield */
 
 #define CH_A 12 // Motore A Pin
 #define CH_B 13 // Motore A Pin
@@ -17,6 +18,9 @@
 #define SPIN_A 3 // DIREZIONE A
 #define SPIN_B 11 // DIREZIONE B
 
+/* END MOTOR SHIELD */
+
+/* LED */
 #define LED 10	// OCCHI
 
 #define FADE 5
@@ -25,10 +29,21 @@
 #define OUT -1
 #define BRIGHTMAX 255
 
+/* GENERAL MOTORS */
 #define FORWARD HIGH
 #define BACKWARD LOW
 
 #define MOTOR_STEP 500
+
+#define M1_R 4
+#define M1_L 5
+#define M2_R 6
+#define M2_L 7
+#define M3_R 23
+#define M3_L 22
+#define M4_R 25
+#define M4_L 24
+
 
 char applicationName[] = "Felix's Brain";
 char accessoryName[] = "Felix";
@@ -51,6 +66,26 @@ void setup()
 
 	pinMode(BK_A, OUTPUT);
 	pinMode(BK_B, OUTPUT);
+
+
+	pinMode(M1_R, OUTPUT);
+	pinMode(M1_L, OUTPUT);
+	pinMode(M2_R, OUTPUT);
+	pinMode(M2_L, OUTPUT);
+	pinMode(M3_R, OUTPUT);
+	pinMode(M3_L, OUTPUT);
+	pinMode(M4_R, OUTPUT);
+	pinMode(M4_L, OUTPUT);
+
+
+	digitalWrite(M1_R, LOW);
+	digitalWrite(M1_L, LOW);
+	digitalWrite(M2_R, LOW);
+	digitalWrite(M2_L, LOW);
+	digitalWrite(M3_R, LOW);
+	digitalWrite(M3_L, LOW);
+	digitalWrite(M4_R, LOW);
+	digitalWrite(M4_L, LOW);
 
 	pinMode(LED, OUTPUT);
 	brightness=0;
@@ -75,6 +110,52 @@ void fade(int diff, int fade)
 }
 /******* END LED PART ******/
 
+/******* GENERAL MOTORS *******/
+
+void servo1(int direction, int step)
+{	
+	int channel=M1_R;
+	
+	if(direction != FORWARD) channel=M1_L;
+
+	digitalWrite(channel, HIGH);
+	delay(step * MOTOR_STEP); 
+	digitalWrite(channel, LOW);
+}
+
+void servo2(int direction, int step)
+{	
+	int channel=M2_R;
+	
+	if(direction != FORWARD) channel=M2_L;
+
+	digitalWrite(channel, HIGH);
+	delay(step * MOTOR_STEP); 
+	digitalWrite(channel, LOW);
+}
+
+void servo3(int direction, int step)
+{	
+	int channel=M3_R;
+	
+	if(direction != FORWARD) channel=M3_L;
+
+	digitalWrite(channel, HIGH);
+	delay(step * MOTOR_STEP); 
+	digitalWrite(channel, LOW);
+}
+void servo4(int direction, int step)
+{	
+	int channel=M4_R;
+	
+	if(direction != FORWARD) channel=M4_L;
+
+	digitalWrite(channel, HIGH);
+	delay(step * MOTOR_STEP); 
+	digitalWrite(channel, LOW);
+}
+
+/* END GENERAL MOTORS */
 
 /***** MOTOR FROM MOTOR SHIELD PART ***************/
 
@@ -122,31 +203,54 @@ void test(char c)
 		delay(500);
 		fade(150, OUT);
         }
-	if(c=='a')   /* ALL */
+	if(c=='w') walk(500, FORWARD, 1);
+	if(c=='s') walk(500, BACKWARD, 1);
+	if(c=='a') motor_left(500, FORWARD, 1);
+	if(c=='d') motor_right(500, FORWARD, 1);
+	if(c=='1') 
 	{
-		fade(BRIGHTMAX, IN);
-		walk(200, FORWARD, 2);
-		delay(1000);
-		walk(200, BACKWARD, 2);
-		fade(BRIGHTMAX, OUT);
+		servo1(FORWARD, 5);
+		servo1(BACKWARD, 5);
 	}
-	if(c=='w') /* WALK */
+	if(c=='2') 
 	{
-		walk(500, FORWARD, 1);
+		servo2(FORWARD, 5);
+		servo2(BACKWARD, 5);
 	}
-	if(c=='s') /* WALK BACKWARDS */
+	if(c=='3') 
 	{
-		walk(500, BACKWARD, 1);
+		servo3(FORWARD, 5);
+		servo3(BACKWARD, 5);
 	}
-	if(c=='a')
-	{	
-		motor_left(500, FORWARD, 1);
-	}
-	if(c=='d')
+	if(c=='4') 
 	{
-		motor_right(500, FORWARD, 1);
+		servo4(FORWARD, 5);
+                delay(1000);
+		servo4(BACKWARD, 5);
 	}
+	if(c=='f') demo();
+
 }
+
+void demo()
+{
+	delay(10000);
+	walk(500, FORWARD, 5);
+	delay(1000);
+	motor_left(500, FORWARD, 2);
+	delay(500);
+	motor_right(500, FORWARD, 2);
+	servo1(FORWARD, 5);
+	servo2(FORWARD, 5);
+	servo4(FORWARD, 5);
+	servo3(FORWARD, 5);
+	delay(1000);
+	servo1(BACKWARD, 5);
+	servo2(BACKWARD, 5);
+	servo3(BACKWARD, 5);
+	walk(500, BACKWARD, 5);
+}
+
 void loop()
 {
 	Usb.Task();
