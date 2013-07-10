@@ -89,6 +89,7 @@ void setup()
 
 	pinMode(LED, OUTPUT);
 	brightness=0;
+	analogWrite(LED, brightness);
 }
 
 /**** LED FADING PART ---- LED WILL BE CONNECTED TO PIN 13 ********/
@@ -134,7 +135,7 @@ void servo2(int direction, int step)
 	digitalWrite(channel, LOW);
 }
 
-void servo3(int direction, int step)
+void servo_rotor(int direction, int step)
 {	
 	int channel=M3_R;
 	
@@ -197,65 +198,41 @@ void walk(int speed, int direction, int step)
 
 void test(char c)
 {
-	if (c =='l')  /* LED */
-	{
-		fade(150, IN);
-		delay(500);
-		fade(150, OUT);
-        }
+	if(c=='1') fade(5, IN); // MAX 14
+	if(c=='2') fade(5, OUT);
+
 	if(c=='w') walk(500, FORWARD, 1);
 	if(c=='s') walk(500, BACKWARD, 1);
+
 	if(c=='a') motor_left(500, FORWARD, 1);
 	if(c=='d') motor_right(500, FORWARD, 1);
-	if(c=='1') 
-	{
-		servo1(FORWARD, 5);
-		servo1(BACKWARD, 5);
-	}
-	if(c=='2') 
-	{
-		servo2(FORWARD, 5);
-		servo2(BACKWARD, 5);
-	}
-	if(c=='3') 
-	{
-		servo3(FORWARD, 5);
-		servo3(BACKWARD, 5);
-	}
-	if(c=='4') 
-	{
-		servo4(FORWARD, 5);
-                delay(1000);
-		servo4(BACKWARD, 5);
-	}
-	if(c=='f') demo();
+
+	if(c=='z') motor_left(500, BACKWARD, 1);
+	if(c=='c') motor_right(500, BACKWARD, 1);
+
+	if(c=='q') servo_rotor(FORWARD, 1);  // Rotazione SX
+	if(c=='e') servo_rotor(BACKWARD, 1);  // Rotazione DX
+
+
+	if(c=='i') servo1(FORWARD, 1);   //Braccio alto  MAX 9
+	if(c=='o') servo1(BACKWARD, 1);
+
+	if(c=='l') servo4(FORWARD, 1);   // Braccio basso
+	if(c=='k') servo4(BACKWARD, 1);
+
+	if(c==',') servo2(BACKWARD, 1);    // Apertura Mano MAX 8
+	if(c=='.') servo2(FORWARD, 1);   // Chiusura Mano
+
+
 
 }
 
-void demo()
-{
-	delay(10000);
-	walk(500, FORWARD, 5);
-	delay(1000);
-	motor_left(500, FORWARD, 2);
-	delay(500);
-	motor_right(500, FORWARD, 2);
-	servo1(FORWARD, 5);
-	servo2(FORWARD, 5);
-	servo4(FORWARD, 5);
-	servo3(FORWARD, 5);
-	delay(1000);
-	servo1(BACKWARD, 5);
-	servo2(BACKWARD, 5);
-	servo3(BACKWARD, 5);
-	walk(500, BACKWARD, 5);
-}
 
 void loop()
 {
-	Usb.Task();
+//	Usb.Task();
 	int numBytes=0;
-	uint8_t buf[1];
+/*	uint8_t buf[1];
 	uint32_t nbread = 0;
 	
 	if (adk.isReady())
@@ -265,8 +242,9 @@ void loop()
 		{
 			test((char)buf[0]);
 		}
-	}
-	else if((numBytes=Serial.available())>0)
+//	}
+	else */
+	if((numBytes=Serial.available())>0)
 	{
 		char buff;
 		buff=(char)Serial.read();
